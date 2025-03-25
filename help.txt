@@ -1,21 +1,20 @@
-check_author:
-  stage: check_author
+stages:
+  - check_permissions
+  - build
+  - test
+  - deploy
+
+check_permissions:
+  stage: check_permissions
   script:
     - |
-      AUTHOR_NAME=$(git log -1 --format='%an')
-      if [ "$GITLAB_USER_LOGIN" = "$AUTHOR_NAME" ]; then
-        echo "❌ Pipeline execution blocked: Commit author ($GITLAB_USER_LOGIN) is not allowed to execute it."
+      if [[ "$GITLAB_USER_LOGIN" == "$(git log -1 --format='%an')" ]]; then
+        echo "❌ Pipeline execution blocked: Commit author ($GITLAB_USER_LOGIN) is executing it."
+        exit 1
+      fi
+      if [[ "$GITLAB_USER_LOGIN" == "$(git log -1 --format='%cn')" ]]; then
+        echo "❌ Pipeline execution blocked: Commit committer ($GITLAB_USER_LOGIN) is executing it."
         exit 1
       fi
   only:
-    - feature-gitlabci
-
-build-job:
-  stage: build
-  tags:
-    - kubernetes-prod-docker-dr
-  before_script:
-    - mkdir ./target
-  script:
-    - echo "Compiling the project"
-    - touch index.html
+    - branches
