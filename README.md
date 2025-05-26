@@ -1,19 +1,3 @@
-Here’s a Python script that uses boto3 to list:
-	•	All S3 buckets.
-	•	Tags associated with each bucket.
-	•	IAM roles that have access to the bucket (by analyzing bucket policies).
-	•	The bucket policy JSON.
-
-It then writes this information into a CSV file.
-
-Prerequisites
-
-Install boto3 if you haven’t already:
-
-pip install boto3
-
-Python Code
-
 import boto3
 import csv
 import json
@@ -80,13 +64,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-Output
-
-The CSV file s3_buckets_report.csv will contain:
-	•	BucketName
-	•	Tags (as a JSON string)
-	•	IAMRolesWithAccess (list of ARNs)
-	•	PolicyJSON (entire bucket policy as a JSON string)
-
-Let me know if you want this script to include bucket ACLs or resource-based policies from IAM side too.
